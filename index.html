@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bharat Carbon Mitra 🇮🇳 | PromptWars</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui; }
+    body { background: #f0fdf4; color: #14532d; }
+    .container { max-width: 500px; margin: 0 auto; padding: 20px; }
+    .header { background: linear-gradient(135deg, #16a34a, #15803d); color: white; padding: 20px; border-radius: 16px; text-align: center; margin-bottom: 20px; }
+    .card { background: white; padding: 20px; border-radius: 16px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    label { display: block; margin: 12px 0 4px; font-weight: 600; }
+    select, input { width: 100%; padding: 10px; border: 2px solid #bbf7d0; border-radius: 8px; font-size: 16px; }
+    button { width: 100%; background: #16a34a; color: white; border: none; padding: 14px; border-radius: 8px; font-size: 18px; font-weight: bold; margin-top: 16px; cursor: pointer; }
+    button:hover { background: #15803d; }
+    .result { background: #dcfce7; border: 2px solid #16a34a; padding: 16px; border-radius: 12px; margin-top: 16px; display: none; }
+    .result h3 { color: #15803d; margin-bottom: 8px; }
+    .tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+    .tab { flex: 1; padding: 10px; background: #dcfce7; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
+    .tab.active { background: #16a34a; color: white; }
+    .hidden { display: none; }
+    .leaderboard-item { display: flex; justify-content: space-between; padding: 12px; background: #f0fdf4; margin: 8px 0; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Bharat Carbon Mitra 🇮🇳</h1>
+      <p>Track Karo, Ped Lagao, Bharat Bachao</p>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" onclick="showTab('calc')">Calculator</button>
+      <button class="tab" onclick="showTab('board')">Leaderboard</button>
+    </div>
+
+    <div id="calc" class="card">
+      <h2>🔥 Aaj Ka Carbon Calculator</h2>
+      
+      <label>Transport Mode:</label>
+      <select id="transport">
+        <option value="0">Chala Nahi</option>
+        <option value="0.12">Bike/Scooter</option>
+        <option value="0.21">Car</option>
+        <option value="0.08">Bus</option>
+        <option value="0.04">Metro/Train</option>
+      </select>
+
+      <label>Kitne KM Chale?</label>
+      <input type="number" id="km" value="0" min="0">
+
+      <label>Khaana:</label>
+      <select id="food">
+        <option value="2.5">Veg Only 🥗</option>
+        <option value="5.6">Veg + Dairy 🥛</option>
+        <option value="7.2">Non-Veg 🍗</option>
+      </select>
+
+      <label>Bijli/AC Kitne Ghante?</label>
+      <input type="number" id="electric" value="0" min="0" max="24">
+
+      <button onclick="calculateCO2()">CO2 Calculate Karo</button>
+
+      <div id="result" class="result">
+        <h3>📊 Tera Aaj Ka Score:</h3>
+        <p id="co2text"></p>
+        <p id="samosatext"></p>
+        <p id="treetext"></p>
+      </div>
+    </div>
+
+    <div id="board" class="card hidden">
+      <h2>🏆 Eco-Warriors Leaderboard</h2>
+      <div class="leaderboard-item"><span>1. Rohit Mumbai</span><span>12.5 kg</span></div>
+      <div class="leaderboard-item"><span>2. Priya Delhi</span><span>15.2 kg</span></div>
+      <div class="leaderboard-item"><span>3. Arjun Bangalore</span><span>18.1 kg</span></div>
+      <div class="leaderboard-item"><span>4. Sneha Pune</span><span>21.3 kg</span></div>
+      <div class="leaderboard-item"><span>5. Siddhi Nagpur 👑</span><span>9.8 kg</span></div>
+    </div>
+
+    <div class="card">
+      <p style="text-align:center; font-size:14px;">Built for PromptWars Challenge 3 | Hack2Skill | #VibeCoding</p>
+    </div>
+  </div>
+
+  <script>
+    function showTab(tab) {
+      document.getElementById('calc').classList.add('hidden');
+      document.getElementById('board').classList.add('hidden');
+      document.getElementById(tab).classList.remove('hidden');
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+
+    function calculateCO2() {
+      const transport = parseFloat(document.getElementById('transport').value);
+      const km = parseFloat(document.getElementById('km').value) || 0;
+      const food = parseFloat(document.getElementById('food').value);
+      const electric = parseFloat(document.getElementById('electric').value) || 0;
+      
+      const total = (transport * km) + food + (electric * 0.82);
+      const samosa = (total / 0.5).toFixed(1);
+      const trees = Math.ceil(total / 21);
+      
+      document.getElementById('co2text').innerHTML = `🌍 Total CO2: <b>${total.toFixed(2)} kg</b>`;
+      document.getElementById('samosatext').innerHTML = `🍛 Ye <b>${samosa} samose</b> ke barabar global warming hai`;
+      document.getElementById('treetext').innerHTML = `🌳 Balance karne ke liye <b>${trees} neem ke ped</b> lagao`;
+      document.getElementById('result').style.display = 'block';
+      
+      let history = JSON.parse(localStorage.getItem('carbon') || '[]');
+      history.push(total);
+      localStorage.setItem('carbon', JSON.stringify(history));
+    }
+  </script>
+</body>
+</html>
