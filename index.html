@@ -3,313 +3,94 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bharat Carbon Mitra 🇮🇳 Pro</title>
+  <meta name="description" content="Track daily carbon footprint with gamification for Bharat">
+  <title>Bharat Carbon Mitra Pro 🇮🇳</title>
+  <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    :root {
-      --bg: #f0fdf4;
-      --card: white;
-      --text: #14532d;
-      --green: #16a34a;
-      --green-dark: #15803d;
-    }
-    [data-theme="dark"] {
-      --bg: #0f172a;
-      --card: #1e293b;
-      --text: #e2e8f0;
-      --green: #22c55e;
-      --green-dark: #16a34a;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui; transition: all 0.3s; }
-    body { background: var(--bg); color: var(--text); }
-   .container { max-width: 600px; margin: 0 auto; padding: 16px; }
-   .header { background: linear-gradient(135deg, var(--green), var(--green-dark)); color: white; padding: 24px; border-radius: 20px; text-align: center; margin-bottom: 20px; position: relative; overflow: hidden; }
-   .header::after { content: '🌳'; position: absolute; font-size: 120px; opacity: 0.1; right: -20px; top: -20px; }
-   .card { background: var(--card); padding: 20px; border-radius: 16px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 1px solid rgba(22,163,74,0.1); }
-    label { display: block; margin: 14px 0 6px; font-weight: 600; font-size: 15px; }
-    select, input { width: 100%; padding: 12px; border: 2px solid #bbf7d0; border-radius: 10px; font-size: 16px; background: var(--bg); color: var(--text); }
-    button { width: 100%; background: var(--green); color: white; border: none; padding: 14px; border-radius: 10px; font-size: 17px; font-weight: bold; margin-top: 16px; cursor: pointer; }
-    button:hover { background: var(--green-dark); transform: translateY(-2px); }
-   .result { background: linear-gradient(135deg, #dcfce7, #bbf7d0); border: 2px solid var(--green); padding: 18px; border-radius: 14px; margin-top: 16px; display: none; }
-    [data-theme="dark"] .result { background: linear-gradient(135deg, #14532d, #166534); }
-   .tabs { display: flex; gap: 8px; margin-bottom: 16px; background: var(--card); padding: 6px; border-radius: 12px; }
-   .tab { flex: 1; padding: 10px; background: transparent; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; color: var(--text); }
-   .tab.active { background: var(--green); color: white; }
-   .hidden { display: none; }
-   .leaderboard-item { display: flex; justify-content: space-between; align-items: center; padding: 14px; background: var(--bg); margin: 10px 0; border-radius: 10px; }
-   .badge { background: var(--green); color: white; padding: 4px 10px; border-radius: 20px; font-size: 12px; }
-   .theme-toggle { position: absolute; top: 16px; right: 16px; background: rgba(255,255,255,0.2); border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 20px; }
-   .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
-   .stat-box { background: var(--bg); padding: 16px; border-radius: 12px; text-align: center; }
-   .stat-box h4 { font-size: 24px; color: var(--green); }
-   .share-btn { background: #1d9bf0; margin-top: 12px; }
-   .share-btn:hover { background: #1a8cd8; }
-    canvas { max-height: 200px; margin-top: 16px; }
-    .streak { background: linear-gradient(135deg, #f97316, #ea580c); color: white; padding: 12px; border-radius: 12px; text-align: center; margin: 12px 0; animation: pulse 2s infinite; }
-    @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.02)} }
-    .tip-card { background: linear-gradient(135deg, #fef3c7, #fde68a); border-left: 4px solid #f59e0b; padding: 14px; border-radius: 10px; margin: 12px 0; }
-    .badge-eco { display: inline-block; background: #22c55e; color: white; padding: 6px 12px; border-radius: 20px; font-size: 13px; margin: 4px; }
-    .confetti { position: fixed; pointer-events: none; z-index: 9999; font-size: 24px; }
-    .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #16a34a; color: white; padding: 14px 24px; border-radius: 10px; display: none; z-index: 9999; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
-    @keyframes fall { to { transform: translateY(100vh) rotate(360deg); opacity: 0; } }
-  </style>
 </head>
 <body>
   <div class="container">
-    <div class="header">
-      <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+    <header class="header" role="banner">
+      <button class="theme-toggle" aria-label="Toggle dark mode" onclick="toggleTheme()">🌙</button>
       <h1>Bharat Carbon Mitra 🇮🇳</h1>
       <p>Track Karo, Ped Lagao, Bharat Bachao</p>
-    </div>
+    </header>
 
-    <div class="tabs">
-      <button class="tab active" onclick="showTab('calc')">📊 Calculator</button>
-      <button class="tab" onclick="showTab('dash')">📈 Dashboard</button>
-      <button class="tab" onclick="showTab('board')">🏆 Top 10</button>
-    </div>
+    <nav class="tabs" role="tablist">
+      <button class="tab active" role="tab" aria-selected="true" onclick="showTab('calc')">📊 Calculator</button>
+      <button class="tab" role="tab" aria-selected="false" onclick="showTab('dash')">📈 Dashboard</button>
+      <button class="tab" role="tab" aria-selected="false" onclick="showTab('board')">🏆 Top 10</button>
+    </nav>
 
-    <div id="calc" class="card">
-      <h2>🔥 Aaj Ka Carbon Footprint</h2>
-      
-      <div class="streak">
-        🔥 Teri Streak: <b id="streakCount">0</b> Din | Keep Going!
-      </div>
-      
-      <label>🚗 Aaj ka Transport:</label>
-      <select id="transport">
-        <option value="0">Ghar pe tha / Paidal</option>
-        <option value="0.12">Bike/Scooter 🏍️</option>
-        <option value="0.21">Car 🚗</option>
-        <option value="0.08">Bus 🚌</option>
-        <option value="0.04">Metro/Train 🚊</option>
-        <option value="0.00">Cycle 🚲 Eco Hero!</option>
-      </select>
+    <main>
+      <section id="calc" class="card" role="tabpanel">
+        <h2>🔥 Aaj Ka Carbon Footprint</h2>
+        <div class="streak" aria-live="polite">
+          🔥 Teri Streak: <b id="streakCount">0</b> Din | Keep Going!
+        </div>
+        
+        <label for="transport">🚗 Aaj ka Transport:</label>
+        <select id="transport" name="transport">
+          <option value="0">Ghar pe tha / Paidal</option>
+          <option value="0.12">Bike/Scooter 🏍️</option>
+          <option value="0.21">Car 🚗</option>
+          <option value="0.08">Bus 🚌</option>
+          <option value="0.04">Metro/Train 🚊</option>
+          <option value="0.00">Cycle 🚲 Eco Hero!</option>
+        </select>
 
-      <label>📍 Kitne KM?</label>
-      <input type="number" id="km" value="0" min="0" placeholder="Jaise 15">
+        <label for="km">📍 Kitne KM?</label>
+        <input type="number" id="km" name="km" value="0" min="0" placeholder="Jaise 15" aria-describedby="km-help">
 
-      <label>🍛 Aaj ka Khaana:</label>
-      <select id="food">
-        <option value="2.5">Veg Thali 🥗 Green Hero</option>
-        <option value="5.6">Veg + Dahi/Paneer 🥛</option>
-        <option value="7.2">Chicken/Mutton 🍗</option>
-        <option value="9.1">Biryani + Cold Drink 🥤💀</option>
-      </select>
+        <label for="food">🍛 Aaj ka Khaana:</label>
+        <select id="food" name="food">
+          <option value="2.5">Veg Thali 🥗 Green Hero</option>
+          <option value="5.6">Veg + Dahi/Paneer 🥛</option>
+          <option value="7.2">Chicken/Mutton 🍗</option>
+          <option value="9.1">Biryani + Cold Drink 🥤💀</option>
+        </select>
 
-      <label>💡 AC/Pankha Kitne Ghante?</label>
-      <input type="range" id="electric" value="0" min="0" max="24" oninput="document.getElementById('hrs').innerText=this.value">
-      <p style="text-align:center; margin-top:4px;"><span id="hrs">0</span> ghante</p>
+        <label for="electric">💡 AC/Pankha Kitne Ghante?</label>
+        <input type="range" id="electric" name="electric" value="0" min="0" max="24" 
+               oninput="document.getElementById('hrs').innerText=this.value"
+               aria-valuemin="0" aria-valuemax="24" aria-valuenow="0">
+        <p style="text-align:center; margin-top:4px;"><span id="hrs">0</span> ghante</p>
 
-      <button onclick="calculateCO2()">⚡ CO2 Calculate Karo</button>
+        <button onclick="calculateCO2()" aria-label="Calculate carbon footprint">⚡ CO2 Calculate Karo</button>
 
-      <div id="result" class="result">
-        <h3>📊 Tera Aaj Ka Impact:</h3>
+        <div id="result" class="result" aria-live="polite" style="display:none;">
+          <h3>📊 Tera Aaj Ka Impact:</h3>
+          <div class="stats">
+            <div class="stat-box"><p>CO2 Emit</p><h4 id="co2val">0 kg</h4></div>
+            <div class="stat-box"><p>Ped Lagao</p><h4 id="treeval">0 🌳</h4></div>
+          </div>
+          <p id="comparetext" style="text-align:center; margin:12px 0; font-weight:600;"></p>
+          <div class="tip-card" id="tiptext">💡 Tip: Calculate kar pehle!</div>
+          <button class="share-btn" onclick="shareResult()" aria-label="Share result on social media">📱 Instagram Pe Share Karo</button>
+        </div>
+      </section>
+
+      <section id="dash" class="card hidden" role="tabpanel">
+        <h2>📈 7 Din Ka Track Record</h2>
+        <canvas id="weekChart" aria-label="7 day carbon footprint chart"></canvas>
         <div class="stats">
-          <div class="stat-box">
-            <p>CO2 Emit</p>
-            <h4 id="co2val">0 kg</h4>
-          </div>
-          <div class="stat-box">
-            <p>Ped Lagao</p>
-            <h4 id="treeval">0 🌳</h4>
-          </div>
+          <div class="stat-box"><p>Week Total</p><h4 id="weekTotal">0 kg</h4></div>
+          <div class="stat-box"><p>Avg Daily</p><h4 id="weekAvg">0 kg</h4></div>
         </div>
-        <p id="comparetext" style="text-align:center; margin:12px 0; font-weight:600;"></p>
-        <div class="tip-card" id="tiptext">
-          💡 Tip: Calculate kar pehle!
-        </div>
-        <button class="share-btn" onclick="shareResult()">📱 Instagram Pe Share Karo</button>
-      </div>
-    </div>
+      </section>
 
-    <div id="dash" class="card hidden">
-      <h2>📈 7 Din Ka Track Record</h2>
-      <canvas id="weekChart"></canvas>
-      <div class="stats">
-        <div class="stat-box">
-          <p>Week Total</p>
-          <h4 id="weekTotal">0 kg</h4>
-        </div>
-        <div class="stat-box">
-          <p>Avg Daily</p>
-          <h4 id="weekAvg">0 kg</h4>
-        </div>
-      </div>
-    </div>
+      <section id="board" class="card hidden" role="tabpanel">
+        <h2>🏆 Bharat Ke Top 10 Eco-Warriors</h2>
+        <div id="leaderboard"></div>
+      </section>
+    </main>
 
-    <div id="board" class="card hidden">
-      <h2>🏆 Bharat Ke Top 10 Eco-Warriors</h2>
-      <div class="leaderboard-item"><span>🥇 1. Siddhi Nagpur</span><span class="badge">9.8 kg 👑</span></div>
-      <div class="leaderboard-item"><span>🥈 2. Rohit Mumbai</span><span class="badge">12.5 kg</span></div>
-      <div class="leaderboard-item"><span>🥉 3. Priya Delhi</span><span class="badge">15.2 kg</span></div>
-      <div class="leaderboard-item"><span>4. Arjun Bangalore</span><span>18.1 kg</span></div>
-      <div class="leaderboard-item"><span>5. Sneha Pune</span><span>21.3 kg</span></div>
-      <div class="leaderboard-item"><span>6. Amit Chennai</span><span>23.7 kg</span></div>
-      <div class="leaderboard-item"><span>7. Kavya Hyderabad</span><span>25.1 kg</span></div>
-      <div class="leaderboard-item"><span>8. Ravi Kolkata</span><span>28.4 kg</span></div>
-      <div class="leaderboard-item"><span>9. Neha Jaipur</span><span>31.2 kg</span></div>
-      <div class="leaderboard-item"><span>10. Karan Ahmedabad</span><span>34.9 kg</span></div>
-    </div>
-
-    <div class="card">
-      <p style="text-align:center; font-size:13px; opacity:0.7;">Built with ❤️ for PromptWars Challenge 3 | Hack2Skill | Google for Developers<br>#VibeCoding #BuildInPublic #AIForBharat #ClimateAction</p>
-    </div>
+    <footer class="card">
+      <p style="text-align:center; font-size:13px; opacity:0.7;">Built with ❤️ for PromptWars Challenge 3 | Hack2Skill</p>
+    </footer>
   </div>
 
-  <div id="toast" class="toast"></div>
-
-  <script>
-    let chart;
-    
-    function showTab(tab) {
-      document.getElementById('calc').classList.add('hidden');
-      document.getElementById('dash').classList.add('hidden');
-      document.getElementById('board').classList.add('hidden');
-      document.getElementById(tab).classList.remove('hidden');
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      event.target.classList.add('active');
-      if(tab === 'dash') updateChart();
-    }
-
-    function toggleTheme() {
-      const html = document.documentElement;
-      const newTheme = html.getAttribute('data-theme') === 'dark'? 'light' : 'dark';
-      html.setAttribute('data-theme', newTheme);
-      event.target.innerText = newTheme === 'dark'? '☀️' : '🌙';
-      if(chart) updateChart();
-    }
-
-    function updateStreak() {
-      let streak = parseInt(localStorage.getItem('streak') || '0');
-      let lastDate = localStorage.getItem('lastDate');
-      let today = new Date().toDateString();
-      
-      if(lastDate !== today) {
-        streak = lastDate === new Date(Date.now()-86400000).toDateString() ? streak + 1 : 1;
-        localStorage.setItem('streak', streak);
-        localStorage.setItem('lastDate', today);
-      }
-      document.getElementById('streakCount').innerText = streak;
-      if(streak >= 7 && lastDate !== today) showToast('🎉 7 Din Streak! Tu Eco Legend hai!');
-    }
-
-    function getTip(co2) {
-      const tips = [
-        {max: 5, tip: '🌟 Wah! Tu already Eco Hero hai. Cycle continue rakh!', badge: 'Green Ninja'},
-        {max: 10, tip: '💡 Tip: Bus/Metro le. Car se 3x kam CO2 banta hai', badge: 'Eco Warrior'},
-        {max: 20, tip: '🚨 Alert: AC 2 ghante kam kar = 3 Samosa CO2 bach jayega', badge: 'Need Improvement'},
-        {max: 999, tip: '💀 Bhai re! Biryani kam kha, ped zyada laga. 1 mahine me 30 ped chahiye!', badge: 'Carbon King'}
-      ];
-      return tips.find(t => co2 <= t.max);
-    }
-
-    function celebrate(co2) {
-      if(co2 < 5) {
-        showToast('🎊 GREEN HERO! 5kg se kam CO2 = Confetti time!');
-        for(let i=0;i<50;i++) {
-          setTimeout(() => createConfetti(), i*30);
-        }
-      }
-    }
-
-    function createConfetti() {
-      const conf = document.createElement('div');
-      conf.className = 'confetti';
-      conf.innerText = ['🌳','🌸','💚','♻️','🍃'][Math.floor(Math.random()*5)];
-      conf.style.left = Math.random()*100 + '%';
-      conf.style.animation = `fall ${2+Math.random()*2}s linear`;
-      document.body.appendChild(conf);
-      setTimeout(() => conf.remove(), 4000);
-    }
-
-    function showToast(msg) {
-      const toast = document.getElementById('toast');
-      toast.innerText = msg;
-      toast.style.display = 'block';
-      setTimeout(() => toast.style.display = 'none', 3000);
-    }
-
-    function calculateCO2() {
-      const transport = parseFloat(document.getElementById('transport').value);
-      const km = parseFloat(document.getElementById('km').value) || 0;
-      const food = parseFloat(document.getElementById('food').value);
-      const electric = parseFloat(document.getElementById('electric').value) || 0;
-      
-      const total = (transport * km) + food + (electric * 0.82);
-      const trees = Math.ceil(total / 21);
-      
-      const comparisons = [
-        {val: 0.5, text: '1 Samosa 🥟'},
-        {val: 1.2, text: '1 Cup Chai ☕'},
-        {val: 2.5, text: '1 Plate Biryani 🍛'},
-        {val: 5.0, text: '1 Movie Ticket 🎬'},
-        {val: 10, text: 'Delhi to Agra Car Trip 🚗'}
-      ];
-      let compare = [...comparisons].reverse().find(c => total >= c.val) || comparisons[0];
-      
-      document.getElementById('co2val').innerText = total.toFixed(1) + ' kg';
-      document.getElementById('treeval').innerText = trees + ' 🌳';
-      document.getElementById('comparetext').innerHTML = `Ye <b>${compare.text}</b> ke barabar CO2 hai!`;
-      document.getElementById('result').style.display = 'block';
-      
-      updateStreak();
-      const tipData = getTip(total);
-      document.getElementById('tiptext').innerHTML = tipData.tip + ` <span class="badge-eco">${tipData.badge}</span>`;
-      celebrate(total);
-      
-      let history = JSON.parse(localStorage.getItem('carbon') || '[]');
-      history.push({date: new Date().toLocaleDateString(), value: total});
-      if(history.length > 7) history.shift();
-      localStorage.setItem('carbon', JSON.stringify(history));
-    }
-
-    function updateChart() {
-      const history = JSON.parse(localStorage.getItem('carbon') || '[]');
-      const labels = history.map(h => h.date);
-      const data = history.map(h => h.value);
-      const total = data.reduce((a,b) => a+b, 0);
-      
-      document.getElementById('weekTotal').innerText = total.toFixed(1) + ' kg';
-      document.getElementById('weekAvg').innerText = (data.length ? total/data.length : 0).toFixed(1) + ' kg';
-      
-      if(chart) chart.destroy();
-      const ctx = document.getElementById('weekChart');
-      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-      chart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'Daily CO2 kg',
-            data: data,
-            borderColor: '#16a34a',
-            backgroundColor: 'rgba(22,163,74,0.1)',
-            tension: 0.4,
-            fill: true
-          }]
-        },
-        options: {
-          plugins: { legend: { display: false } },
-          scales: { 
-            y: { beginAtZero: true, grid: { color: isDark? '#334155' : '#e2e8f0' } },
-            x: { grid: { display: false } }
-          }
-        }
-      });
-    }
-
-    function shareResult() {
-      const co2 = document.getElementById('co2val').innerText;
-      const text = `Maine aaj ${co2} CO2 emit kiya! Bharat Carbon Mitra pe track karo 🇮🇳\n\n#PromptWars #Hack2Skill #ClimateAction`;
-      if(navigator.share) {
-        navigator.share({title: 'Bharat Carbon Mitra', text: text, url: window.location.href});
-      } else {
-        navigator.clipboard.writeText(text);
-        showToast('📱 Text copy ho gaya! Instagram pe paste kar do');
-      }
-    }
-
-    window.onload = () => { updateStreak(); updateChart(); }
-  </script>
+  <div id="toast" class="toast" role="alert" aria-live="assertive"></div>
+  <script src="app.js"></script>
 </body>
 </html>
